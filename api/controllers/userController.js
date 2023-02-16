@@ -14,12 +14,17 @@ const getUsers = async (req, res) => {
  * @route POST /api/Users
  */
 const setUser = async (req, res) => {
-    if (!req.body.username) {
-        throw new Error("Please provide a username field");
+    if ((!req.body.username) || (!req.body.id) || (!req.body.password) || (!req.body.email)) {
+        throw new Error("Please provide all required fields: id, username, password, email");
     }
+
     const newUser = await User.create({
+        id: req.body.id,
         username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
     });
+    
     res.status(200).json(newUser);
 };
 
