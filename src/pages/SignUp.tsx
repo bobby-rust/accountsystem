@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import React from "react";
 import "../styles/signup.css";
+import { v4 as uuidv4 } from "uuid";
 
 const API_URL = "http://localhost:4000/api/users";
+
+type User = {
+    id: String;
+    email: String;
+    username: String;
+    password: String;
+};
 
 export default function SignUp(props: any) {
     const users = getUsers();
@@ -25,7 +33,7 @@ export default function SignUp(props: any) {
         );
     }
 
-    async function postUser(user: any) {
+    async function postUser(user: User) {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: {
@@ -38,6 +46,16 @@ export default function SignUp(props: any) {
 
     function handleSubmit(event: any) {
         event.preventDefault();
+
+        const currUser: User = {
+            id: uuidv4(),
+            email: email,
+            username: username,
+            password: password,
+        };
+
+        postUser(currUser);
+
         console.log(`Email: ${email}`);
         console.log(`username: ${username}`);
         console.log(`password: ${password}`);
