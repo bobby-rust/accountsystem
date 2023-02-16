@@ -1,27 +1,27 @@
-const User = require('../models/User');
+const User = require("../models/user");
 
 /**
  * @description Get all Users
- * @route GET /api/Users 
+ * @route GET /api/Users
  */
 const getUsers = async (req, res) => {
-    const Users = await User.find()
-    res.status(200).json(Users)
-}
+    const Users = await User.find();
+    res.status(200).json(Users);
+};
 
 /**
  * @description Create a User
  * @route POST /api/Users
  */
 const setUser = async (req, res) => {
-    if (!req.body.location) {
-        throw new Error("Please provide a location field")
+    if (!req.body.username) {
+        throw new Error("Please provide a username field");
     }
     const newUser = await User.create({
-        location: req.body.location
-    })
+        username: req.body.username,
+    });
     res.status(200).json(newUser);
-}
+};
 
 /**
  * @description Update a User
@@ -32,33 +32,32 @@ const updateUser = async (req, res) => {
 
     if (!User) {
         res.status(400);
-        throw new Error("User not found")
+        throw new Error("User not found");
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.body.id, req.body)
+    const updatedUser = await User.findByIdAndUpdate(req.body.id, req.body);
     res.status(200).json(updatedUser);
-}
+};
 
 /**
  * @description Delete a User
  * @route DELETE /api/Users
  */
 const deleteUser = async (req, res) => {
-
     const User = await User.findById(req.body.id);
 
     if (!User) {
         res.status(400);
-        throw new Error("User not found")
+        throw new Error("User not found");
     }
 
     await User.remove();
     res.status(200).json({ id: req.body.id });
-}
+};
 
 module.exports = {
-  getUsers, 
-  setUser,
-  updateUser,
-  deleteUser
-}
+    getUsers,
+    setUser,
+    updateUser,
+    deleteUser,
+};
