@@ -41,7 +41,25 @@ export default function SignUp(props: any) {
             },
             body: JSON.stringify(user),
         });
-        return response.json();
+
+        if (response.status === 200) {
+            return response.json();
+        } else if (response.status === 422) {
+            // Handle duplicate key error
+            const res = await response.json();
+            const message = res.message;
+
+            if (message.search("email") !== -1) {
+                console.log("An account with this email already exists");
+                alert("An account with this email already exists");
+            } else if (message.search("username") !== -1) {
+                console.log("Username unavailable");
+                alert("Username unavailable");
+            } else if (message.search("password") !== -1) {
+                console.log("Password unavailable");
+                alert("Password unavailable");
+            }
+        }
     }
 
     function handleSubmit(event: any) {
@@ -92,6 +110,7 @@ export default function SignUp(props: any) {
                             name='email'
                             value={email}
                             onChange={handleEmailChange}
+                            required
                         />
                     </label>
                 </div>
@@ -103,6 +122,7 @@ export default function SignUp(props: any) {
                             name='username'
                             value={username}
                             onChange={handleUsernameChange}
+                            required
                         />
                     </label>
                 </div>
@@ -113,6 +133,7 @@ export default function SignUp(props: any) {
                             type='password'
                             value={password}
                             onChange={handlePasswordChange}
+                            required
                         />
                     </label>
                 </div>

@@ -18,14 +18,26 @@ const setUser = async (req, res) => {
         throw new Error("Please provide all required fields: id, username, password, email");
     }
 
-    const newUser = await User.create({
+    const newUser = new User({
         id: req.body.id,
         email: req.body.email,
         username: req.body.username,
         password: req.body.password,
-    });
+    })
 
-    res.status(200).json(newUser);
+    newUser.save(function(err) {
+        if (err) {
+            console.log(err.message)
+            return res.status(422).send({ success: false, message: err.message });
+            // if (err.name === "MongoError" && err.code === "E11000") {
+            //     console.log("err.name is MongoError and err.code is E11000")
+            //     return res.status(422).send({ success: false, message: 'User already exists' });
+            // }
+        } else {
+            return res.status(200).json(newUser);
+        }
+    })
+    
 };
 
 /**
