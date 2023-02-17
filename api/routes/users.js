@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 const router = express.Router();
 const {
-    getUser,
+    getUsers,
+    loginUser,
     setUser,
     updateUser,
     deleteUser,
@@ -13,6 +14,6 @@ mongoose.connect(process.env.DATABASE_URL, () => {
     console.log("Users connected to database");
 });
 
-router.route("/").get(getUser).post(setUser).delete(deleteUser).put(updateUser);
-
+router.route("/").get(getUsers).post(setUser).delete(deleteUser).put(updateUser);
+router.route("/login").post(loginUser)
 module.exports = router;

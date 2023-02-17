@@ -19,15 +19,12 @@ export default function SignUp(props: any) {
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then(res =>
-            res
-                .json()
-                .then(data => console.log(data))
-                .catch(err => console.log(err))
-        );
+        });
+
+        return response.json();
     }
 
-    async function postUser(user: User) {
+    async function createUser(user: User) {
         const response = await fetch(API_URL, {
             method: "POST",
             headers: {
@@ -66,7 +63,7 @@ export default function SignUp(props: any) {
             password: password,
         };
 
-        postUser(currUser);
+        createUser(currUser);
 
         console.log(`Email: ${email}`);
         console.log(`username: ${username}`);

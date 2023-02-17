@@ -2,9 +2,9 @@ const User = require("../models/user");
 
 /**
  * @description Get users
- * @route GET /api/users
+ * @route POST /api/users/login
  */
-const getUser = async (req, res) => {
+const loginUser = async (req, res) => {
     const user = await User.find({
         email: req.body.email,
         username: req.body.username,
@@ -14,7 +14,7 @@ const getUser = async (req, res) => {
     if (user[0]) {
         res.status(200).json(user);
     } else {
-        res.status(400).json({
+        res.status(418).json({
             success: false,
             message: "User does not exist",
         });
@@ -23,9 +23,14 @@ const getUser = async (req, res) => {
 };
 
 /**
- * @description Get a user
+ * @description Get all users
  * @route GET /api/users
  */
+const getUsers = async(req, res) => {
+    const users = await User.find()
+    
+    return res.status(200).json(users);
+}
 
 /**
  * @description Create a user
@@ -38,9 +43,7 @@ const setUser = async (req, res) => {
         !req.body.password ||
         !req.body.email
     ) {
-        throw new Error(
-            "Please provide all required fields: id, username, password, email"
-        );
+        return res.status(400).send({ success: false, message: "Please provide all required fields: id, email, username, password" })
     }
 
     const newUser = new User({
@@ -99,7 +102,8 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-    getUser,
+    loginUser,
+    getUsers,
     setUser,
     updateUser,
     deleteUser,
