@@ -2,15 +2,9 @@ import { Link } from "react-router-dom";
 import React from "react";
 import "../styles/signup.css";
 import { v4 as uuidv4 } from "uuid";
+import { User } from "../types/User";
 
 const API_URL = "http://localhost:4000/api/users";
-
-type User = {
-    id: String;
-    email: String;
-    username: String;
-    password: String;
-};
 
 export default function SignUp(props: any) {
     const users = getUsers();
@@ -25,11 +19,11 @@ export default function SignUp(props: any) {
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then((res) =>
+        }).then(res =>
             res
                 .json()
-                .then((data) => console.log(data))
-                .catch((err) => console.log(err))
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
         );
     }
 

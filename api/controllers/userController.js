@@ -1,21 +1,46 @@
 const User = require("../models/user");
 
 /**
- * @description Get all Users
- * @route GET /api/Users
+ * @description Get users
+ * @route GET /api/users
  */
-const getUsers = async (req, res) => {
-    const Users = await User.find();
-    res.status(200).json(Users);
+const getUser = async (req, res) => {
+    const user = await User.find({
+        email: req.body.email,
+        username: req.body.username,
+        password: req.body.password,
+    });
+
+    if (user[0]) {
+        res.status(200).json(user);
+    } else {
+        res.status(400).json({
+            success: false,
+            message: "User does not exist",
+        });
+        console.log(user);
+    }
 };
 
 /**
- * @description Create a User
- * @route POST /api/Users
+ * @description Get a user
+ * @route GET /api/users
+ */
+
+/**
+ * @description Create a user
+ * @route POST /api/users
  */
 const setUser = async (req, res) => {
-    if ((!req.body.username) || (!req.body.id) || (!req.body.password) || (!req.body.email)) {
-        throw new Error("Please provide all required fields: id, username, password, email");
+    if (
+        !req.body.username ||
+        !req.body.id ||
+        !req.body.password ||
+        !req.body.email
+    ) {
+        throw new Error(
+            "Please provide all required fields: id, username, password, email"
+        );
     }
 
     const newUser = new User({
@@ -23,12 +48,14 @@ const setUser = async (req, res) => {
         email: req.body.email,
         username: req.body.username,
         password: req.body.password,
-    })
+    });
 
-    newUser.save(function(err) {
+    newUser.save(function (err) {
         if (err) {
-            console.log(err.message)
-            return res.status(422).send({ success: false, message: err.message });
+            console.log(err.message);
+            return res
+                .status(422)
+                .send({ success: false, message: err.message });
             // if (err.name === "MongoError" && err.code === "E11000") {
             //     console.log("err.name is MongoError and err.code is E11000")
             //     return res.status(422).send({ success: false, message: 'User already exists' });
@@ -36,13 +63,12 @@ const setUser = async (req, res) => {
         } else {
             return res.status(200).json(newUser);
         }
-    })
-    
+    });
 };
 
 /**
- * @description Update a User
- * @route PUT /api/User
+ * @description Update a user
+ * @route PUT /api/user
  */
 const updateUser = async (req, res) => {
     const User = await User.findById(req.body.id);
@@ -57,7 +83,7 @@ const updateUser = async (req, res) => {
 };
 
 /**
- * @description Delete a User
+ * @description Delete a user
  * @route DELETE /api/Users
  */
 const deleteUser = async (req, res) => {
@@ -73,7 +99,7 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-    getUsers,
+    getUser,
     setUser,
     updateUser,
     deleteUser,
