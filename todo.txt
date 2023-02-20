@@ -1,4 +1,4 @@
-- implement change password
+- implement change password ✓
 - implement delete account
 - implement authentication (JWT?)
 - implement login persistence (local storage, cookies, session ?)
