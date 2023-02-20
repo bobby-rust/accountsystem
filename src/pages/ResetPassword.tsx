@@ -1,14 +1,44 @@
 import React from "react";
+import "../styles/resetpassword.css";
+import { User } from "../types/User";
+const API_URL = "http://localhost:4000/api/users";
 
-export default function ResetPassword() {
+export default function ResetPassword(props: any) {
     const [newPassword, setNewPassword] = React.useState("");
     const [verifyNewPassword, setVerifyNewPassword] = React.useState("");
 
-    const handleSubmit = (event: React.BaseSyntheticEvent) => {
+    console.log(props.user);
+    const handleSubmit = async (event: React.BaseSyntheticEvent) => {
         event.preventDefault();
         // Do stuff
 
+        if (!(newPassword === verifyNewPassword)) {
+            alert("Usernames must match");
+            return;
+        }
+
+        const newUser: User = {
+            ...props.user[0],
+            password: newPassword,
+        };
+
+        const newUserInfo = await updateUserPassword(newUser);
+
+        console.log(newUserInfo);
         console.log("Password successfully changed.");
+    };
+
+    const updateUserPassword = async (currUser: User) => {
+        console.log(currUser);
+        const response = await fetch(API_URL, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(currUser),
+        });
+
+        return response.json();
     };
 
     const handleNewPasswordChange = (event: React.BaseSyntheticEvent) => {
@@ -20,8 +50,9 @@ export default function ResetPassword() {
 
     return (
         <>
-            <div>
-                <form onSubmit={handleSubmit}>
+            <div className='reset-password-container'>
+                <div>Password reset for: {props.user[0].username}</div>
+                <form onSubmit={handleSubmit} className='reset-password-form'>
                     <label>
                         Enter new password:
                         <input
@@ -38,6 +69,7 @@ export default function ResetPassword() {
                             onChange={handleVerifyNewPasswordChange}
                         />
                     </label>
+                    <button type='submit'>Submit</button>
                 </form>
             </div>
         </>

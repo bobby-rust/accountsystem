@@ -74,14 +74,14 @@ const setUser = async (req, res) => {
  * @route PUT /api/users
  */
 const updateUser = async (req, res) => {
-    const User = await User.findById(req.body.id);
+    const user = await User.findById(req.body._id);
 
-    if (!User) {
+    if (!user) {
         res.status(400);
         throw new Error("User not found");
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.body.id, req.body);
+    const updatedUser = await User.findByIdAndUpdate(req.body._id, req.body);
     res.status(200).json(updatedUser);
 };
 
