@@ -11,6 +11,7 @@ export default function Profile(props: any) {
     React.useEffect(() => {
         if (state) setUser(state[0]);
     }, []);
+
     console.log(user);
 
     const handleLogout = (event: React.BaseSyntheticEvent) => {

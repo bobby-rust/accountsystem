@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 /**
- * @description Get users
+ * @description Get user given credentials, return user object stored in db
  * @route POST /api/users/login
  */
 const loginUser = async (req, res) => {
