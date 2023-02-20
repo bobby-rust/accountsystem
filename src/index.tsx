@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import NoPage from "./pages/NoPage";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
@@ -21,6 +22,7 @@ root.render(
                 <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<SignUp />} />
                 <Route path='/profile' element={<Profile />} />
+                <Route path='/forgotpassword' element={<ForgotPassword />} />
                 <Route path='*' element={<NoPage />} />
             </Routes>
         </BrowserRouter>

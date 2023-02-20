@@ -6,8 +6,10 @@ import { User } from "../types/User";
 
 const API_URL = "http://localhost:4000/api/users";
 
-export default function SignUp(props: any) {
-    const users = getUsers();
+export default function SignUp() {
+    const users: any = getUsers().finally(() => console.log(users));
+
+    // console.log(users);
 
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");

@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:4000/api/users";
 
-export default function Login(props: any) {
+export default function Login() {
     const [email, setEmail] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    const [user, setUser] = React.useState(null);
+    // const [user, setUser] = React.useState(null);
     const navigate = useNavigate();
 
     async function LoginUser(user: User) {
@@ -40,8 +40,11 @@ export default function Login(props: any) {
         };
 
         const user = await LoginUser(currUser);
-        setUser(user);
+
+        // setUser(user);
+
         console.log(user);
+
         if (user.message === "User does not exist") {
             console.log("Invalid credentials");
             return;
@@ -105,6 +108,9 @@ export default function Login(props: any) {
                                 onChange={handlePasswordChange}
                             />
                         </label>
+                    </div>
+                    <div className='forgot-password'>
+                        <Link to='/forgotpassword'>Forgot Password?</Link>
                     </div>
                     <button type='submit' value='Submit'>
                         Submit

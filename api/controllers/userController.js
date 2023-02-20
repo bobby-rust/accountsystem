@@ -71,7 +71,7 @@ const setUser = async (req, res) => {
 
 /**
  * @description Update a user
- * @route PUT /api/user
+ * @route PUT /api/users
  */
 const updateUser = async (req, res) => {
     const User = await User.findById(req.body.id);
@@ -87,12 +87,12 @@ const updateUser = async (req, res) => {
 
 /**
  * @description Delete a user
- * @route DELETE /api/Users
+ * @route DELETE /api/users
  */
 const deleteUser = async (req, res) => {
-    const User = await User.findById(req.body.id);
+    const user = await User.findById(req.body.id);
 
-    if (!User) {
+    if (!user) {
         res.status(400);
         throw new Error("User not found");
     }
@@ -101,10 +101,27 @@ const deleteUser = async (req, res) => {
     res.status(200).json({ id: req.body.id });
 };
 
+/**
+ * @description Find a user by email for forgot password
+ * @route POST /api/users/forgotpassword
+ */
+const forgotPassword = async (req, res) => {
+    const user = await User.find({
+        email: req.body.email
+    })
+
+    if (!user) {
+        res.status(418).json({ success: false, message: "User not found" })
+    } else {
+        res.status(200).json(user)
+    }
+}
+
 module.exports = {
     loginUser,
     getUsers,
     setUser,
     updateUser,
     deleteUser,
+    forgotPassword
 };

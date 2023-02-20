@@ -5,6 +5,7 @@ const router = express.Router();
 const {
     getUsers,
     loginUser,
+    forgotPassword,
     setUser,
     updateUser,
     deleteUser,
@@ -15,5 +16,7 @@ mongoose.connect(process.env.DATABASE_URL, () => {
 });
 
 router.route("/").get(getUsers).post(setUser).delete(deleteUser).put(updateUser);
-router.route("/login").post(loginUser)
+router.route("/login").post(loginUser);
+router.route("/forgotpassword").post(forgotPassword);
+
 module.exports = router;
