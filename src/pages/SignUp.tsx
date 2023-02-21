@@ -3,10 +3,12 @@ import React from "react";
 import "../styles/signup.css";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "../types/User";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:4000/api/users";
 
 export default function SignUp() {
+    const navigate = useNavigate();
     const users: any = getUsers().finally(() => console.log(users));
 
     // console.log(users);
@@ -16,7 +18,7 @@ export default function SignUp() {
     const [email, setEmail] = React.useState("");
 
     async function getUsers() {
-        const response = await fetch(API_URL, {
+        const response: any = await fetch(API_URL, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -52,10 +54,12 @@ export default function SignUp() {
                 console.log("Password unavailable");
                 alert("Password unavailable");
             }
+
+            return response;
         }
     }
 
-    function handleSubmit(event: any) {
+    async function handleSubmit(event: any) {
         event.preventDefault();
 
         const currUser: User = {
@@ -65,7 +69,12 @@ export default function SignUp() {
             password: password,
         };
 
-        createUser(currUser);
+        const response = await createUser(currUser);
+
+        console.log(response);
+        if (!response.status) {
+            navigate("/login");
+        }
 
         console.log(`Email: ${email}`);
         console.log(`username: ${username}`);

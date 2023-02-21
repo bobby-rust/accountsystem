@@ -18,6 +18,7 @@ export default function Profile() {
         setUser(null);
         navigate("/");
     };
+
     return (
         <>
             <div>Profile</div>

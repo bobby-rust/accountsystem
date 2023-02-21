@@ -10,9 +10,12 @@ export default function Login() {
     const [email, setEmail] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    // const [user, setUser] = React.useState(null);
     const navigate = useNavigate();
 
+    /**
+     * Sends a post request with a User object to the user api and returns the response
+     * @param user The user whose data is to be retrieved
+     */
     async function LoginUser(user: User) {
         const response = await fetch(API_URL + "/login", {
             method: "POST",
@@ -28,10 +31,12 @@ export default function Login() {
         }
     }
 
+    /**
+     * Attempts to log in user and navigates to /profile if successful
+     * @return undefined
+     */
     async function handleSubmit(event: React.BaseSyntheticEvent) {
         event.preventDefault();
-        console.log(`username: ${username}`);
-        console.log(`password: ${password}`);
 
         const currUser: User = {
             email: email,
@@ -41,18 +46,15 @@ export default function Login() {
 
         const user = await LoginUser(currUser);
 
-        // setUser(user);
-
         console.log(user);
 
         if (user.message === "User does not exist") {
             console.log("Invalid credentials");
+            alert("Invalid credentials");
             return;
         }
 
         navigate("/profile", { state: user });
-        setUsername("");
-        setPassword("");
     }
 
     function handleEmailChange(event: any) {
@@ -60,14 +62,10 @@ export default function Login() {
     }
 
     function handleUsernameChange(event: React.BaseSyntheticEvent) {
-        // event.preventDefault();
-        console.log(username);
         setUsername(event.target.value);
     }
 
     function handlePasswordChange(event: React.BaseSyntheticEvent) {
-        // event.preventDefault();
-        console.log(password);
         setPassword(event.target.value);
     }
 

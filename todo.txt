@@ -6,3 +6,4 @@
       so that I don't have to login every time I open the site.
 - implement password encryption for security (bcrypt or similar? could write an algo from scratch)
 - Update readme with use instructions (and/or write a script to automate?)
+- Add option to create an account/login using Google with OAuth
