@@ -1,10 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require("cors");
+// const cors = require("cors");
 require("dotenv").config();
 const app = express();
 mongoose.set("strictQuery", false);
-const User = require("./models/user");
+// const User = require("./models/user");
 
 
 /**

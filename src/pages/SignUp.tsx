@@ -59,7 +59,7 @@ export default function SignUp() {
         }
     }
 
-    async function handleSubmit(event: any) {
+    async function handleSubmit(event: React.BaseSyntheticEvent) {
         event.preventDefault();
 
         const currUser: User = {
@@ -84,17 +84,17 @@ export default function SignUp() {
         setEmail("");
     }
 
-    function handleEmailChange(event: any) {
+    function handleEmailChange(event: React.BaseSyntheticEvent) {
         setEmail(event.target.value);
     }
 
-    function handleUsernameChange(event: any) {
+    function handleUsernameChange(event: React.BaseSyntheticEvent) {
         // event.preventDefault();
         console.log(username);
         setUsername(event.target.value);
     }
 
-    function handlePasswordChange(event: any) {
+    function handlePasswordChange(event: React.BaseSyntheticEvent) {
         // event.preventDefault();
         console.log(password);
         setPassword(event.target.value);

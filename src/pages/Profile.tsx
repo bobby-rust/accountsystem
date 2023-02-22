@@ -9,7 +9,7 @@ export default function Profile() {
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (state) setUser(state[0]);
+        if (state) setUser(state);
     }, [state]);
 
     console.log(user);

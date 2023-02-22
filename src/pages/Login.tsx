@@ -48,13 +48,16 @@ export default function Login() {
 
         console.log(user);
 
-        if (user.message === "User does not exist") {
+        if (user.message === "Invalid credentials") {
             console.log("Invalid credentials");
             alert("Invalid credentials");
             return;
+        } else if (user.message === "Unknown error") {
+            console.log("An unknown error has occurred");
+            alert("An unknown error has occurred");
         }
 
-        navigate("/profile", { state: user });
+        navigate("/profile", { state: user.user });
     }
 
     function handleEmailChange(event: any) {

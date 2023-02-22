@@ -1,36 +1,5 @@
 const User = require("../models/user");
-
-/**
- * @description Get user given credentials, return user object stored in db
- * @route POST /api/users/login
- */
-const loginUser = async (req, res) => {
-    const user = await User.find({
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-    });
-
-    if (user[0]) {
-        res.status(200).json(user);
-    } else {
-        res.status(418).json({
-            success: false,
-            message: "User does not exist",
-        });
-        console.log(user);
-    }
-};
-
-/**
- * @description Get all users
- * @route GET /api/users
- */
-const getUsers = async(req, res) => {
-    const users = await User.find()
-    
-    return res.status(200).json(users);
-}
+const bcrypt = require("bcrypt");
 
 /**
  * @description Create a user
@@ -46,28 +15,64 @@ const setUser = async (req, res) => {
         return res.status(400).send({ success: false, message: "Please provide all required fields: id, email, username, password" })
     }
 
-    const newUser = new User({
-        id: req.body.id,
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
+    try {
+        const hashedPass = await bcrypt.hash(req.body.password, 10);
+        const newUser = await User.create({
+            id: req.body.id,
+            email: req.body.email,
+            username: req.body.username,
+            password: hashedPass,
+        });
+
+        const userInfo = {
+            id: newUser.id,
+            email: newUser.email,
+            username: newUser.username
+        };
+
+        res.status(200).json(userInfo);
+    } catch (err) {
+        console.log(err);
+        res.status(422).send({ message: "Failed to create user" });
+    }
+};
+
+/**
+ * @description Get user given credentials, return non-sensitive user object fields stored in db
+ * @route POST /api/users/login
+ */
+const loginUser = async (req, res) => {
+    const _user = await User.find({
+        username: req.body.username
     });
 
-    newUser.save(function (err) {
-        if (err) {
-            console.log(err.message);
-            return res
-                .status(422)
-                .send({ success: false, message: err.message });
-            // if (err.name === "MongoError" && err.code === "E11000") {
-            //     console.log("err.name is MongoError and err.code is E11000")
-            //     return res.status(422).send({ success: false, message: 'User already exists' });
-            // }
-        } else {
-            return res.status(200).json(newUser);
+    const user = _user[0];
+
+    if (user) {
+        try{ 
+            if (bcrypt.compare(req.body.password, user.password)) {
+                res.status(200).json({ success: true, message: "Successfully authenticated", user: { id: user.id, username: user.username, email: user.email } });
+            } else {
+                res.status(500).json({ success: false, message: "Invalid credentials" });
+            }
+        } catch {
+            res.status(500).json({ success: false, message: "Unknown error" });
         }
-    });
+    } else {
+        res.status(500).json({ success: false, message: "Unknown error" });
+    }
 };
+
+/**
+ * @description Get all users
+ * @route GET /api/users
+ */
+const getUsers = async(req, res) => {
+    const users = await User.find()
+    
+    return res.status(200).json(users);
+}
+
 
 /**
  * @description Update a user
@@ -90,15 +95,14 @@ const updateUser = async (req, res) => {
  * @route DELETE /api/users
  */
 const deleteUser = async (req, res) => {
-    const user = await User.findById(req.body.id);
+    const user = await User.findById(req.body._id);
 
     if (!user) {
-        res.status(400);
-        throw new Error("User not found");
+        res.status(400).json({ success: false, message: "Could not find user" });
     }
 
-    await User.remove();
-    res.status(200).json({ id: req.body.id });
+    await User.deleteOne(user);
+    res.status(200).json({ success: true, message: "User successfully deleted", _id: req.body._id });
 };
 
 /**
