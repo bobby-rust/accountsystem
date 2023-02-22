@@ -1,9 +1,9 @@
 - implement change password ✓
 - implement delete account
-- implement authentication (JWT?)
+- implement authorization (JWT?)
 - implement login persistence (local storage, cookies, session ?)
     * As a user, I want to be able to login, leave the page, and come back and still be logged in
       so that I don't have to login every time I open the site.
-- implement password encryption for security (bcrypt or similar? could write an algo from scratch)
+- implement password encryption for security (bcrypt) ✓
 - Update readme with use instructions (and/or write a script to automate?)
 - Add option to create an account/login using Google with OAuth
