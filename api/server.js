@@ -1,11 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-// const cors = require("cors");
 require("dotenv").config();
 const app = express();
 mongoose.set("strictQuery", false);
-// const User = require("./models/user");
-
 
 /**
  * The following fixes a CORS issue

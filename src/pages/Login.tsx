@@ -3,13 +3,19 @@ import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { User } from "../types/User";
 import { useNavigate } from "react-router-dom";
+import { createContext } from "react";
 
 const API_URL = "http://localhost:4000/api/users";
 
-export default function Login() {
+const UserContext = createContext<User | null>(null);
+
+function Login() {
     const [email, setEmail] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
+
+    const [user, setUser] = React.useState<User | null>(null);
+
     const navigate = useNavigate();
 
     /**
@@ -38,26 +44,28 @@ export default function Login() {
     async function handleSubmit(event: React.BaseSyntheticEvent) {
         event.preventDefault();
 
-        const currUser: User = {
+        const userObj: User = {
             email: email,
             username: username,
             password: password,
         };
 
-        const user = await LoginUser(currUser);
+        const currUser = await LoginUser(userObj);
 
-        console.log(user);
+        console.log(currUser);
 
-        if (user.message === "Invalid credentials") {
+        if (currUser.message === "Invalid credentials") {
             console.log("Invalid credentials");
             alert("Invalid credentials");
             return;
-        } else if (user.message === "Unknown error") {
+        } else if (currUser.message === "Unknown error") {
             console.log("An unknown error has occurred");
             alert("An unknown error has occurred");
         }
 
-        navigate("/profile", { state: user.user });
+        setUser(currUser.user);
+
+        navigate("/profile");
     }
 
     function handleEmailChange(event: any) {
@@ -74,56 +82,60 @@ export default function Login() {
 
     return (
         <>
-            <div className='login'>
-                <div>Login</div>
-                <form onSubmit={handleSubmit} className='login-form'>
-                    <div className='email-container'>
-                        <label>
-                            Email:
-                            <input
-                                type='email'
-                                name='email'
-                                value={email}
-                                onChange={handleEmailChange}
-                                required
-                            />
-                        </label>
+            <UserContext.Provider value={user}>
+                <div className='login'>
+                    <div>Login</div>
+                    <form onSubmit={handleSubmit} className='login-form'>
+                        <div className='email-container'>
+                            <label>
+                                Email:
+                                <input
+                                    type='email'
+                                    name='email'
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                    required
+                                />
+                            </label>
+                        </div>
+                        <div className='username-container'>
+                            <label>
+                                Username:
+                                <input
+                                    type='text'
+                                    name='username'
+                                    value={username}
+                                    onChange={handleUsernameChange}
+                                />
+                            </label>
+                        </div>
+                        <div className='password-container'>
+                            <label>
+                                Password:
+                                <input
+                                    type='password'
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                />
+                            </label>
+                        </div>
+                        <div className='forgot-password'>
+                            <Link to='/forgotpassword'>Forgot Password?</Link>
+                        </div>
+                        <button type='submit' value='Submit'>
+                            Submit
+                        </button>
+                    </form>
+                    <div>
+                        <Link to='/signup'>Sign Up</Link>
                     </div>
-                    <div className='username-container'>
-                        <label>
-                            Username:
-                            <input
-                                type='text'
-                                name='username'
-                                value={username}
-                                onChange={handleUsernameChange}
-                            />
-                        </label>
+                    <div>
+                        <Link to='/'>Home</Link>
                     </div>
-                    <div className='password-container'>
-                        <label>
-                            Password:
-                            <input
-                                type='password'
-                                value={password}
-                                onChange={handlePasswordChange}
-                            />
-                        </label>
-                    </div>
-                    <div className='forgot-password'>
-                        <Link to='/forgotpassword'>Forgot Password?</Link>
-                    </div>
-                    <button type='submit' value='Submit'>
-                        Submit
-                    </button>
-                </form>
-                <div>
-                    <Link to='/signup'>Sign Up</Link>
                 </div>
-                <div>
-                    <Link to='/'>Home</Link>
-                </div>
-            </div>
+            </UserContext.Provider>
         </>
     );
 }
+
+export { UserContext, Login };

@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 /**
  * @description Create a user
@@ -48,10 +49,25 @@ const loginUser = async (req, res) => {
 
     const user = _user[0];
 
+    // Authenticate user
     if (user) {
-        try{ 
+        try { 
             if (bcrypt.compare(req.body.password, user.password)) {
-                res.status(200).json({ success: true, message: "Successfully authenticated", user: { id: user.id, username: user.username, email: user.email } });
+
+                const safeUser = {
+                    id: user.id,
+                    email: user.email,
+                    username: user.username,
+                };
+
+                jwt.sign({safeUser}, process.env.JWT_SECRET, (err, token) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(token);
+                        res.status(200).json({ token, user: safeUser });
+                    };
+                });
             } else {
                 res.status(500).json({ success: false, message: "Invalid credentials" });
             }
@@ -119,7 +135,7 @@ const forgotPassword = async (req, res) => {
     } else {
         res.status(200).json(user)
     }
-}
+};
 
 module.exports = {
     loginUser,

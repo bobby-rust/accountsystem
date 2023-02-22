@@ -1,18 +1,25 @@
 import { Link } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import { User } from "../types/User";
+import { UserContext } from "./Login";
+import { useContext } from "react";
 
 export default function Profile() {
+    const currUser = useContext(UserContext);
+    console.log(currUser);
+
     const [user, setUser] = React.useState<User | null>(null);
-    const { state } = useLocation();
-    const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (state) setUser(state);
-    }, [state]);
+        if (currUser) {
+            setUser(currUser);
+        }
+    }, [currUser]);
 
     console.log(user);
+
+    const navigate = useNavigate();
 
     const handleLogout = (event: React.BaseSyntheticEvent) => {
         setUser(null);
