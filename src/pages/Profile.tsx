@@ -1,35 +1,34 @@
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React from "react";
-import { User } from "../types/User";
-import { UserContext } from "./Login";
-import { useContext } from "react";
+
+// type ProfileProps = {
+//     user: User;
+//     handleLogout: React.MouseEventHandler<HTMLButtonElement>;
+// };
 
 export default function Profile() {
-    const currUser = useContext(UserContext);
-    console.log(currUser);
-
-    const [user, setUser] = React.useState<User | null>(null);
+    const { state } = useLocation();
+    const navigate = useNavigate();
+    const [user, setUser] = React.useState<any | null>(null);
 
     React.useEffect(() => {
-        if (currUser) {
-            setUser(currUser);
+        setUser(state);
+        if (!state.user) {
+            navigate("/login");
         }
-    }, [currUser]);
-
-    console.log(user);
-
-    const navigate = useNavigate();
+    }, [state, navigate]);
 
     const handleLogout = (event: React.BaseSyntheticEvent) => {
         setUser(null);
-        navigate("/");
+        navigate("/login");
     };
 
+    console.log(user);
     return (
         <>
             <div>Profile</div>
-            {user && <h1>Hello, {user.username}</h1>}
+            {user && <h1>Hello, {user.user.username}</h1>}
             <div>
                 <Link to='/'>Home</Link>
             </div>

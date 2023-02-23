@@ -4,12 +4,12 @@ import "./index.css";
 // import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login } from "./pages/Login";
-import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Home from "./pages/Home";
 import NoPage from "./pages/NoPage";
 import ForgotPassword from "./pages/ForgotPassword";
+import Profile from "./pages/Profile";
 
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement

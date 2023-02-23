@@ -23,18 +23,21 @@ const setUser = async (req, res) => {
             email: req.body.email,
             username: req.body.username,
             password: hashedPass,
-        });
+        }).catch(err => { res.status(422).json({ success: false, message: err })});
 
-        const userInfo = {
-            id: newUser.id,
-            email: newUser.email,
-            username: newUser.username
-        };
-
-        res.status(200).json(userInfo);
+        if (newUser) {
+            const userInfo = {
+                _id: newUser._id,
+                id: newUser.id,
+                email: newUser.email,
+                username: newUser.username
+            };
+    
+            res.status(200).json(userInfo);
+        }
     } catch (err) {
         console.log(err);
-        res.status(422).send({ message: "Failed to create user" });
+        res.status(422).send({ success: false, message: "Failed to create user" });
     }
 };
 
@@ -46,7 +49,7 @@ const loginUser = async (req, res) => {
     const _user = await User.find({
         username: req.body.username
     });
-
+    console.log(_user);
     const user = _user[0];
 
     // Authenticate user
@@ -69,10 +72,10 @@ const loginUser = async (req, res) => {
                     };
                 });
             } else {
-                res.status(500).json({ success: false, message: "Invalid credentials" });
+                res.status(404).json({ success: false, message: "Invalid credentials" });
             }
         } catch {
-            res.status(500).json({ success: false, message: "Unknown error" });
+            res.status(422).json({ success: false, message: "Unknown error" });
         }
     } else {
         res.status(500).json({ success: false, message: "Unknown error" });
@@ -89,7 +92,6 @@ const getUsers = async(req, res) => {
     return res.status(200).json(users);
 }
 
-
 /**
  * @description Update a user
  * @route PUT /api/users
@@ -98,12 +100,12 @@ const updateUser = async (req, res) => {
     const user = await User.findById(req.body._id);
 
     if (!user) {
-        res.status(400);
-        throw new Error("User not found");
+        res.status(400).send({ success: false, message: "Could not find user" });
+    } else {
+        const updatedUser = await User.findByIdAndUpdate(req.body._id, req.body);
+        res.status(200).json(updatedUser);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.body._id, req.body);
-    res.status(200).json(updatedUser);
 };
 
 /**
@@ -113,12 +115,12 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     const user = await User.findById(req.body._id);
 
-    if (!user) {
-        res.status(400).json({ success: false, message: "Could not find user" });
+    if (user[0]) {
+        await User.deleteOne(user);
+        res.status(200).json({ success: true, message: "User successfully deleted", _id: req.body._id });
+    } else {
+        res.status(418).json({ success: false, message: "Could not find user" });
     }
-
-    await User.deleteOne(user);
-    res.status(200).json({ success: true, message: "User successfully deleted", _id: req.body._id });
 };
 
 /**
@@ -130,10 +132,10 @@ const forgotPassword = async (req, res) => {
         email: req.body.email
     })
 
-    if (!user) {
-        res.status(418).json({ success: false, message: "User not found" })
-    } else {
+    if (user[0]) {
         res.status(200).json(user)
+    } else {
+        res.status(418).json({ success: false, message: "User not found" })
     }
 };
 
